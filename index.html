@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Digital Invitation</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+}
+
+/* =========================
+   COVER
+========================= */
+
+#cover{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    overflow:hidden;
+    transition:.8s ease;
+}
+
+#cover.hide{
+    opacity:0;
+    visibility:hidden;
+}
+
+.cover-image{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(
+        to top,
+        rgba(0,0,0,.55),
+        rgba(0,0,0,.15)
+    );
+}
+
+/* =========================
+   OPEN BUTTON
+========================= */
+
+#openBtn{
+
+    position:absolute;
+
+    left:50%;
+    bottom:8%;
+
+    transform:translateX(-50%);
+
+    min-width:220px;
+    height:58px;
+
+    border:none;
+    border-radius:999px;
+
+    background:#5C1D2F;
+
+    color:#F6F0E8;
+
+    font-size:15px;
+    font-weight:600;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    box-shadow:
+    0 10px 30px rgba(92,29,47,.4);
+
+    transition:.3s ease;
+}
+
+#openBtn:hover{
+
+    transform:
+    translateX(-50%)
+    translateY(-3px);
+
+}
+
+#openBtn:active{
+
+    transform:
+    translateX(-50%)
+    scale(.97);
+
+}
+
+/* =========================
+   VIDEO
+========================= */
+
+#video{
+
+    width:100vw;
+    height:100vh;
+
+    object-fit:cover;
+
+    display:block;
+
+    background:#000;
+
+}
+
+/* =========================
+   MUSIC BUTTON
+========================= */
+
+#musicBtn{
+
+    position:fixed;
+
+    right:20px;
+    bottom:20px;
+
+    width:58px;
+    height:58px;
+
+    border:none;
+    border-radius:50%;
+
+    background:
+    rgba(92,29,47,.85);
+
+    color:#fff;
+
+    font-size:20px;
+
+    cursor:pointer;
+
+    display:none;
+
+    z-index:999;
+
+    backdrop-filter:blur(10px);
+
+    box-shadow:
+    0 10px 25px rgba(92,29,47,.4);
+
+}
+
+#musicBtn.playing{
+
+    animation:spin 4s linear infinite;
+
+}
+
+@keyframes spin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     COVER
+========================= -->
+
+<div id="cover">
+
+    <img
+        src="cover.jpg"
+        alt="Cover"
+        class="cover-image">
+
+    <div class="overlay"></div>
+
+    <button id="openBtn">
+
+        Buka Undangan
+
+    </button>
+
+</div>
+
+<!-- =========================
+     VIDEO
+========================= -->
+
+<video
+    id="video"
+    playsinline
+    preload="auto">
+
+    <source
+        src="video.mp4"
+        type="video/mp4">
+
+</video>
+
+<!-- =========================
+     MUSIC
+========================= -->
+
+<audio
+    id="music">
+
+    <source
+        src="backsound.mp3"
+        type="audio/mpeg">
+
+</audio>
+
+<!-- =========================
+     MUSIC CONTROL
+========================= -->
+
+<button id="musicBtn">
+
+    ♪
+
+</button>
+
+<script>
+
+/* ELEMENT */
+
+const cover = document.getElementById('cover');
+const openBtn = document.getElementById('openBtn');
+
+const video = document.getElementById('video');
+const music = document.getElementById('music');
+
+const musicBtn = document.getElementById('musicBtn');
+
+/* OPEN INVITATION */
+
+openBtn.addEventListener('click', async ()=>{
+
+    cover.classList.add('hide');
+
+    try{
+        await video.play();
+    }catch(err){
+        console.log(err);
+    }
+
+    try{
+        await music.play();
+
+        musicBtn.style.display='block';
+        musicBtn.classList.add('playing');
+
+    }catch(err){
+        console.log(err);
+    }
+
+});
+
+/* MUSIC TOGGLE */
+
+musicBtn.addEventListener('click',()=>{
+
+    if(music.paused){
+
+        music.play();
+
+        musicBtn.classList.add('playing');
+
+    }else{
+
+        music.pause();
+
+        musicBtn.classList.remove('playing');
+
+    }
+
+});
+
+/* VIDEO FINISH */
+
+video.addEventListener('ended',()=>{
+
+    music.pause();
+
+    musicBtn.classList.remove('playing');
+
+});
+
+</script>
+
+</body>
+</html>

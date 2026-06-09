@@ -6,9 +6,6 @@
 
 <title>Digital Invitation</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
 <style>
 
 *{
@@ -46,15 +43,13 @@ body{
     width:100%;
     height:100%;
     object-fit:cover;
-    display:block;
 }
 
 .overlay{
     position:absolute;
     inset:0;
 
-    background:
-    linear-gradient(
+    background:linear-gradient(
         to top,
         rgba(0,0,0,.55),
         rgba(0,0,0,.15)
@@ -94,15 +89,6 @@ body{
     box-shadow:
     0 10px 30px rgba(92,29,47,.4);
 
-    transition:.3s ease;
-}
-
-#openBtn:hover{
-
-    transform:
-    translateX(-50%)
-    translateY(-3px);
-
 }
 
 #openBtn:active{
@@ -126,8 +112,6 @@ body{
 
     display:block;
 
-    background:#000;
-
 }
 
 /* =========================
@@ -147,8 +131,7 @@ body{
     border:none;
     border-radius:50%;
 
-    background:
-    rgba(92,29,47,.85);
+    background:rgba(92,29,47,.85);
 
     color:#fff;
 
@@ -187,12 +170,9 @@ body{
 
 </style>
 </head>
-
 <body>
 
-<!-- =========================
-     COVER
-========================= -->
+<!-- COVER -->
 
 <div id="cover">
 
@@ -204,16 +184,12 @@ body{
     <div class="overlay"></div>
 
     <button id="openBtn">
-
         Buka Undangan
-
     </button>
 
 </div>
 
-<!-- =========================
-     VIDEO
-========================= -->
+<!-- VIDEO -->
 
 <video
     id="video"
@@ -226,12 +202,9 @@ body{
 
 </video>
 
-<!-- =========================
-     MUSIC
-========================= -->
+<!-- MUSIC -->
 
-<audio
-    id="music">
+<audio id="music">
 
     <source
         src="backsound.mp3"
@@ -239,9 +212,7 @@ body{
 
 </audio>
 
-<!-- =========================
-     MUSIC CONTROL
-========================= -->
+<!-- MUSIC CONTROL -->
 
 <button id="musicBtn">
 
@@ -250,8 +221,6 @@ body{
 </button>
 
 <script>
-
-/* ELEMENT */
 
 const cover = document.getElementById('cover');
 const openBtn = document.getElementById('openBtn');
@@ -268,19 +237,29 @@ openBtn.addEventListener('click', async ()=>{
     cover.classList.add('hide');
 
     try{
+
         await video.play();
+
     }catch(err){
+
         console.log(err);
+
     }
 
     try{
+
+        music.volume = 1;
+
         await music.play();
 
-        musicBtn.style.display='block';
+        musicBtn.style.display = 'block';
+
         musicBtn.classList.add('playing');
 
     }catch(err){
+
         console.log(err);
+
     }
 
 });
@@ -305,13 +284,35 @@ musicBtn.addEventListener('click',()=>{
 
 });
 
-/* VIDEO FINISH */
+/* VIDEO ENDED */
 
 video.addEventListener('ended',()=>{
 
-    music.pause();
+    let volume = music.volume;
 
-    musicBtn.classList.remove('playing');
+    const fadeOut = setInterval(()=>{
+
+        volume -= 0.01;
+
+        if(volume <= 0){
+
+            clearInterval(fadeOut);
+
+            music.pause();
+
+            music.currentTime = 0;
+
+            music.volume = 1;
+
+            musicBtn.classList.remove('playing');
+
+        }else{
+
+            music.volume = volume;
+
+        }
+
+    },100);
 
 });
 
